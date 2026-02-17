@@ -44,3 +44,17 @@ Em resumo: fastapi[standard] é mais conveniente para começar, enquanto fastapi
 ### O que pode-se analisar com Ruff
 
 ![Códigos que o Ruff pode analisar](/images/ruff-codigos.png)
+
+## Web e desenvolvimento para a Web
+
+Quando roda `fastapi dev` por baixo dos panos a disponibilidade do servidor Web se faz por meio do `Uvicorn` que é um servidor de aplicação ASGI.
+
+É possível abrir o servidor local para ser acessado por outros dispositivos locais com o comando `--host` Exemplo:
+
+```shell
+fastapi dev fastapi_study/app.py --host 0.0.0.0
+```
+
+Para descobrir o seu IP:
+- no linux: `ip addr`
+- no windows `ipconfig`
