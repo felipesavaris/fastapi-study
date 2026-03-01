@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 from fastapi_study.schemas import Message, UserList, UserSchemaIn, UserSchemaOut
 
@@ -26,3 +27,30 @@ def create_user(user: UserSchemaIn):
 @app.get('/users', status_code=HTTPStatus.OK, response_model=UserList)
 def retrieve_users():
     return UserList(users=memory_database)
+
+
+@app.put('/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserSchemaOut)
+def update_user(user_id: int, user: UserSchemaIn):
+    if not memory_database:
+        return HTMLResponse(content='No users found', status_code=HTTPStatus.NOT_FOUND)
+
+    for index, user_in_db in enumerate(memory_database):
+        if user_in_db.id == user_id:
+            updated_user = UserSchemaOut(id=user_id, **user.model_dump(exclude={'id'}))
+            memory_database[index] = updated_user
+            return updated_user
+
+    return HTMLResponse(content='User not found', status_code=HTTPStatus.NOT_FOUND)
+
+
+@app.delete('/users/{user_id}', status_code=HTTPStatus.NO_CONTENT)
+def delete_user(user_id: int):
+    if not memory_database:
+        return HTMLResponse(content='No users found', status_code=HTTPStatus.NOT_FOUND)
+
+    for index, user_in_db in enumerate(memory_database):
+        if user_in_db.id == user_id:
+            del memory_database[index]
+            return None
+
+    return HTMLResponse(content='User not found', status_code=HTTPStatus.NOT_FOUND)

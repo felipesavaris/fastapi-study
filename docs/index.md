@@ -28,4 +28,4 @@ O curso que estou seguindo foi remodelado no ano de 2025 e possui os seguintes c
 - 13: [Fazendo deploy da aplicação no Fly.io](https://www.youtube.com/watch?v=pZxOSOHmDtg&list=PLOQgLBuj2-3KT9ZWvPmaGFQ0KjIez0403&index=14)
 - 14: [Despedida e próximos passos](https://www.youtube.com/watch?v=SDwocgA_Siw&list=PLOQgLBuj2-3KT9ZWvPmaGFQ0KjIez0403&index=15)
 
-Atualmente terminei a aula 02.
+Atualmente iniciei a aula 03 -> 1h, 15min e 49s. 
