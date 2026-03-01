@@ -27,3 +27,12 @@ def test_create_user_return_success(client):
 
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json() == {'id': 1, 'username': 'John Doe', 'email': 'john.doe@example.com'}
+
+
+def test_retrieve_users_return_success(client):
+    response = client.get('/users')
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        'users': [{'id': 1, 'username': 'John Doe', 'email': 'john.doe@example.com'}]
+    }

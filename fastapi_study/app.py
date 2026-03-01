@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from fastapi import FastAPI
 
-from fastapi_study.schemas import Message, UserSchemaIn, UserSchemaOut
+from fastapi_study.schemas import Message, UserList, UserSchemaIn, UserSchemaOut
 
 app = FastAPI(title='FastAPI Study', version='0.0.1')
 
@@ -21,3 +21,8 @@ def create_user(user: UserSchemaIn):
 
     # return UserSchemaOut(**user.model_dump())
     return user_withn_id
+
+
+@app.get('/users', status_code=HTTPStatus.OK, response_model=UserList)
+def retrieve_users():
+    return UserList(users=memory_database)

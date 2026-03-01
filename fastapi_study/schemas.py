@@ -13,3 +13,7 @@ class UserSchemaOut(BaseModel):
 
 class UserSchemaIn(UserSchemaOut):
     password: str
+
+
+class UserList(BaseModel):
+    users: list[UserSchemaOut]
