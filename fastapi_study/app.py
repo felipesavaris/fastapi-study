@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 
 from fastapi_study.schemas import Message, UserList, UserSchemaIn, UserSchemaOut
 
@@ -17,6 +17,12 @@ def read_root():
 
 @app.post('/users', status_code=HTTPStatus.CREATED, response_model=UserSchemaOut)
 def create_user(user: UserSchemaIn):
+    # aqui tem um bug, se deletar um usuário, 
+    # o id do próximo usuário criado será o mesmo do usuário deletado, 
+    # porque o id é gerado com base no tamanho da lista. 
+    # Para resolver isso, seria necessário implementar uma lógica para gerar ids únicos, 
+    # como um contador global ou usar uma biblioteca de geração de ids.
+    
     user_withn_id = UserSchemaOut(id=len(memory_database) + 1, **user.model_dump(exclude={'id'}))
     memory_database.append(user_withn_id)
 
@@ -31,26 +37,23 @@ def retrieve_users():
 
 @app.put('/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserSchemaOut)
 def update_user(user_id: int, user: UserSchemaIn):
-    if not memory_database:
-        return HTMLResponse(content='No users found', status_code=HTTPStatus.NOT_FOUND)
-
     for index, user_in_db in enumerate(memory_database):
         if user_in_db.id == user_id:
             updated_user = UserSchemaOut(id=user_id, **user.model_dump(exclude={'id'}))
             memory_database[index] = updated_user
             return updated_user
 
-    return HTMLResponse(content='User not found', status_code=HTTPStatus.NOT_FOUND)
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='User not found')
 
 
 @app.delete('/users/{user_id}', status_code=HTTPStatus.NO_CONTENT)
 def delete_user(user_id: int):
     if not memory_database:
-        return HTMLResponse(content='No users found', status_code=HTTPStatus.NOT_FOUND)
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='User not found')
 
     for index, user_in_db in enumerate(memory_database):
         if user_in_db.id == user_id:
             del memory_database[index]
-            return None
+            return Response(status_code=HTTPStatus.NO_CONTENT)
 
-    return HTMLResponse(content='User not found', status_code=HTTPStatus.NOT_FOUND)
+    return Response(content='User not found', status_code=HTTPStatus.NOT_FOUND)
